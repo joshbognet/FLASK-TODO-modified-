@@ -19,7 +19,7 @@
         <h2>My ToDo's</h2>
         <div>
             {% for item in todos %}
-                <p>{{item}} </p> <a href="{{url_for('delete', todo_item=item)}}">delete</a>
+                <p>{{item}} <a href="{{url_for('delete', todo_item=item)}}">delete</a> <a href="{{url_for('update', todo_item=item)}}">update</a></p> 
             {% endfor %}
         </div>
         
