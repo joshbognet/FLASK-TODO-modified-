@@ -3,7 +3,9 @@
     margin: 0;
     box-sizing: border-box;
 }
-
+body{
+    background-color: rgba(0, 0, 255, 0.301);
+}
 .container{
     margin: 10px auto;
     background-color: #f4f4f4;
