@@ -1,8 +1,14 @@
-from ast import Return
-from crypt import methods
 from flask import Flask, redirect, render_template, request, url_for
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
+
+
+db = SQLAlchemy(app)
+
+class Todo(db.Model):
+    todo_item = db.Column(db.String(60))
 
 @app.route("/")
 def index():
