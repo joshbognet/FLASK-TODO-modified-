@@ -32,8 +32,15 @@ def index():
         db.session.add(todo)
         db.session.commit()
     todos = Todo.query.all()
+    
+    # REVERSE THE LIST FOR LAST ITEMS TO SHOW ON THE TOP AND FIRST ITEM TO SHOW AT THE BOTTOM
+        # reveresed_list = todos[::-1]
+    reveresed_list = reversed(todos)
 
-    return render_template("index.html", todos = todos)
+
+
+
+    return render_template("index.html", todos = reveresed_list)
 
 
 @app.route('/delete/<todo_item>')
