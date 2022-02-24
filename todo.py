@@ -23,20 +23,22 @@ class Todo(db.Model):
     def __repr__(self):
         return f'Todo({self.todo_item})'
 
-@app.route("/")
+@app.route("/", methods = ['GET', 'POST'])
 def index():
-    return render_template("index.html", todos = todo_data)
+    if request.form:
+        new_item = request.form.get('')
 
+        todo = Todo(todo_item = new_item)
+        db.session.add(todo)
+        db.session.commit()
+    todos = Todo.query.all()
 
-todo_data = [] #stores data entered
-update = []
+    return render_template("index.html", todos = todos)
 
 
 @app.route("/create-todo", methods=["POST"])
 def create_todo():
-    new_todo = request.form.get("new_todo") #create a variable that stores form data
-    todo_data.append(new_todo) # appends data to an array
-    # print(todo_data) #prints array of things to do
+   
     return redirect(url_for("index")) #redirects back to the index page
 
 
@@ -47,14 +49,9 @@ def delete(todo_item):
 
     return redirect(url_for("index"))
 
-item = ''
+
 @app.route('/update/<todo_item>', methods=['GET','POST']) #renders page to update
 def update(todo_item):
-
-    index = todo_data.index(todo_item) #gets index of item to be changed
-
-    global item     # make this variable global(accessible outside this scope)
-    item = index    
 
     return render_template('update.html', todo_item = todo_item) # render and take todo_item
     
@@ -63,7 +60,7 @@ def update(todo_item):
 def update_item():
     if request.method == 'POST':
         new_item = request.form.get('new_item')  #get that particular item u just updated from the form
-        todo_data[item] = new_item  # set the new item to index of the old item to replace the old one
+
 
     return redirect(url_for('index')) # redirect to index page
 
