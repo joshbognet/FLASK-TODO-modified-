@@ -22,7 +22,9 @@ Flask==2.0.2
 Flask-Cors==3.0.10
 Flask-HTTPAuth==4.5.0
 Flask-Passlib==0.1
+Flask-SQLAlchemy==2.5.1
 future==0.18.2
+greenlet==1.1.2
 gunicorn==20.1.0
 gyp==0.1
 httplib2==0.18.1
@@ -49,6 +51,7 @@ olefile==0.46
 PAM==0.4.2
 paramiko==2.7.2
 passlib==1.6.1
+pbr==5.8.1
 pdfkit==1.0.0
 pexpect==4.8.0
 Pillow==8.1.2
@@ -75,7 +78,9 @@ requests==2.25.1
 SecretStorage==3.3.1
 simplejson==3.17.2
 six==1.16.0
+SQLAlchemy==1.4.31
 systemd-python==234
+testresources==2.0.1
 ubuntu-advantage-tools==27.6
 ubuntu-drivers-common==0.0.0
 ufw==0.36.1

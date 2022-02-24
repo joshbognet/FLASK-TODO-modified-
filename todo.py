@@ -55,7 +55,7 @@ def update(todo_item):
 
     return render_template('update.html', todo_item = todo_item) # render and take todo_item
     
-
+"""
 @app.route('/update_item', methods=['POST'])  #performs the update function
 def update_item():
     if request.method == 'POST':
@@ -63,7 +63,7 @@ def update_item():
 
 
     return redirect(url_for('index')) # redirect to index page
-
+"""
 
 if __name__ == "__main__":
     app.run(debug = True)
