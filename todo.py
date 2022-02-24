@@ -1,14 +1,27 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-
+import os
 
 app = Flask(__name__)
+
+#find current app path where db is to be stored on os
+project_dir = os.path.dirname(os.path.abspath(__file__)) #directory where DB is to be stored
+
+database_file = f'sqlite:///{os.path.join(project_dir, "todo.db")}' #create database file
+
+# Conneccting database_file(todo.db) to SQLAlchemy dependencies
+app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 
 db = SQLAlchemy(app)
 
 class Todo(db.Model):
-    todo_item = db.Column(db.String(60))
+    id = db.Column(db.Integer, unique=True, primary_key=True, nullable=False) 
+    todo_item = db.Column(db.String(60), unique=True, nullable =False)
+
+    def __repr__(self):
+        return f'Todo({self.todo_item})'
 
 @app.route("/")
 def index():
