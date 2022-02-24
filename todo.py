@@ -21,12 +21,12 @@ class Todo(db.Model):
     todo_item = db.Column(db.String(60), unique=False, nullable =False)
 
     def __repr__(self):
-        return f'Todo({self.todo_item})'
+        return f'{self.todo_item}'
 
 @app.route("/", methods = ['GET', 'POST'])
 def index():
     if request.form:
-        new_item = request.form.get('')
+        new_item = request.form.get('new_todo')
 
         todo = Todo(todo_item = new_item)
         db.session.add(todo)
@@ -34,13 +34,6 @@ def index():
     todos = Todo.query.all()
 
     return render_template("index.html", todos = todos)
-
-
-@app.route("/create-todo", methods=["POST"])
-def create_todo():
-   
-    return redirect(url_for("index")) #redirects back to the index page
-
 
 
 @app.route('/delete/<todo_item>')
