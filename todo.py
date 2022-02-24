@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, unique=True, primary_key=True, nullable=False) 
-    todo_item = db.Column(db.String(60), unique=True, nullable =False)
+    todo_item = db.Column(db.String(60), unique=False, nullable =False)
 
     def __repr__(self):
         return f'Todo({self.todo_item})'
