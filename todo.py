@@ -1,16 +1,13 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-import os
-
+from datetime import datetime
+ 
 app = Flask(__name__)
 
-#find current app path where db is to be stored on os
-project_dir = os.path.dirname(os.path.abspath(__file__)) #directory where DB is to be stored
 
-database_file = f'sqlite:///{os.path.join(project_dir, "todo.db")}' #create database file
 
 # Conneccting database_file(todo.db) to SQLAlchemy dependencies
-app.config["SQLALCHEMY_DATABASE_URI"] = database_file
+app.config["SQLALCHEMY_DATABASE_URI"] ='sqlite:///db.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 
@@ -18,52 +15,60 @@ db = SQLAlchemy(app)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, unique=True, primary_key=True, nullable=False) 
-    todo_item = db.Column(db.String(60), unique=False, nullable =False)
+    title= db.Column(db.String(60), unique=False, nullable =False)
+    date=db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __repr__(self):
-        return f'{self.todo_item}'
+
 
 @app.route("/", methods = ['GET', 'POST'])
 def index():
     if request.form:
-        new_item = request.form.get('new_todo')
+        new_todo= request.form.get('new_todo')
 
-        todo = Todo(todo_item = new_item)
+        todo = Todo(title = new_todo)
         db.session.add(todo)
         db.session.commit()
-    todos = Todo.query.all()
-    
-    # REVERSE THE LIST FOR LAST ITEMS TO SHOW ON THE TOP AND FIRST ITEM TO SHOW AT THE BOTTOM
-        # reveresed_list = todos[::-1]
-    reveresed_list = reversed(todos)
+    todos = Todo.query.all() 
+    return render_template("index.html", todos = todos)
 
 
-
-
-    return render_template("index.html", todos = reveresed_list)
-
-
-@app.route('/delete/<todo_item>')
-def delete(todo_item):
-    todo_data.remove(todo_item)
-
-    return redirect(url_for("index"))
-
-
-@app.route('/update/<todo_item>', methods=['GET','POST']) #renders page to update
-def update(todo_item):
-
-    return render_template('update.html', todo_item = todo_item) # render and take todo_item
-    
 """
-@app.route('/update_item', methods=['POST'])  #performs the update function
-def update_item():
-    if request.method == 'POST':
-        new_item = request.form.get('new_item')  #get that particular item u just updated from the form
+***#NOTE***
+Also check  Html to see form 
 
+@app.route('/edit', methods=['POST'])  #performs the update function
+def edit(): 
+edit_todo=request.form.get('edit_todo')   # this represents the edit input from the form
+  old_todo= request.form.get('old_todo')   # this represents the item to be updated/edited   
+     item = Todo.query.filter_by(title=old_todo).first()  #this queries the db to retrieve the specific item to be updated/edited by its title
+         item.title=edit_todo   #this updates/edits the old todo to the new todo
 
-    return redirect(url_for('index')) # redirect to index page
+    return redirect('/') # redirect to index page
 """
+
+
+@app.route("/edit", methods = ["POST"])
+def edit():
+    edit_todo = request.form.get('edit_todo')
+    old_todo = request.form.get('old_todo')
+    todo = Todo.query.filter_by(title=old_todo).first()
+    todo.title=edit_todo
+    db.session.commit()
+    return redirect('/')
+    
+
+@app.route('/delete', methods=["POST"])
+def delete():
+    title=request.form.get('title') #
+    todo=Todo.query.filter_by(title=title).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect('/')
+
 
 if __name__ == "__main__":
+    db.create_all()
+    
+    
     app.run(debug = True)
+    
